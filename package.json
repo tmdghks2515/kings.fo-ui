@@ -13,7 +13,8 @@
     "@mui/material": "^7.3.11",
     "next": "16.2.9",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "swiper": "^12.2.0"
   },
   "devDependencies": {
     "babel-plugin-react-compiler": "1.0.0"

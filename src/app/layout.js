@@ -1,4 +1,7 @@
 import "./globals.css";
+import "swiper/css";
+import "swiper/css/pagination";
+import MuiThemeProvider from "../theme/MuiThemeProvider";
 
 export const metadata = {
   title: "fo-ui",
@@ -8,7 +11,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="ko">
-      <body>{children}</body>
+      <body>
+        <MuiThemeProvider>{children}</MuiThemeProvider>
+      </body>
     </html>
   );
 }
