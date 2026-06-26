@@ -1,5 +1,4 @@
-<!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
+## 작업 규칙
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-<!-- END:nextjs-agent-rules -->
+- PowerShell 콘솔에서 한글이 깨져 보이더라도 파일 자체가 UTF-8로 정상일 수 있다. 한글 깨짐을 이유로 사용자에게 반복 안내하지 말고, 필요하면 `Get-Content -Encoding UTF8` 또는 실제 파일 내용을 기준으로 확인한다.
+- 빌드 테스트는 시간이 오래 걸리므로 사용자가 명시적으로 요청한 경우에만 진행한다. 일반적인 소규모 수정 후에는 빌드를 실행하지 않는다.
