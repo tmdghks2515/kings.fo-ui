@@ -79,7 +79,7 @@ export default function MainHeader() {
           }}
         >
           <Image
-            src="/logo/thekingslogo.png"
+            src="/logo/thekingstextlogo.png"
             width={156}
             height={38}
             alt="THE KINGS"

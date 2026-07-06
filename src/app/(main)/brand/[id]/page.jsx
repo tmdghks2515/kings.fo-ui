@@ -86,7 +86,7 @@ export default function BrandDetailPage() {
   const logoImageSrc = toImageSrc(brand.logo, EMPTY_LOGO_SRC)
 
   return (
-    <Stack sx={{ width: '100%', bgcolor: '#fbfaf8' }}>
+    <Stack sx={{ width: '100%', bgcolor: '#fff' }}>
       <Box
         component="section"
         sx={{

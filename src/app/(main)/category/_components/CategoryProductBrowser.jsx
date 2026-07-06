@@ -358,7 +358,7 @@ export default function CategoryProductBrowser({ selectedCategoryId }) {
   }
 
   return (
-    <Stack sx={{ width: '100%', bgcolor: '#fbfaf8' }}>
+    <Stack sx={{ width: '100%', bgcolor: '#fff' }}>
       <Box
         component="section"
         sx={{

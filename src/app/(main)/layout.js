@@ -10,6 +10,8 @@ export default function MainLayout({ children }) {
       sx={{
         width: "100%",
         minHeight: "100dvh",
+        display: "flex",
+        flexDirection: "column",
         mx: "auto",
       }}
     >
@@ -18,9 +20,12 @@ export default function MainLayout({ children }) {
         component="main"
         sx={{
           width: "100%",
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        {children}
+        <Box sx={{ flex: 1, width: "100%" }}>{children}</Box>
         <MainFooter />
       </Box>
     </Box>

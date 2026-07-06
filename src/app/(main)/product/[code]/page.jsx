@@ -152,7 +152,7 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <Stack sx={{ width: '100%', bgcolor: '#fbfaf8' }}>
+    <Stack sx={{ width: '100%', bgcolor: '#fff' }}>
       <ContentContainer sx={{ py: { xs: 4, md: 7 } }}>
         <Stack spacing={{ xs: 5, md: 8 }}>
           <Stack

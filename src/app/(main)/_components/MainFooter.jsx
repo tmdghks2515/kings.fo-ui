@@ -2,21 +2,19 @@
 
 import { Box, Grid, Stack, Typography } from '@mui/material'
 import ContentContainer from '@/components/layout/ContentContainer'
+import Image from 'next/image'
 
 const companyInfo = [
-  { label: '회사명', value: '더킹즈컴퍼니' },
-  { label: '대표이사', value: '이 강' },
-  { label: '사업자등록번호', value: '701-88-03409' },
-  {
-    label: '개인정보관리책임자',
-    value: '임승환 tmdghks0615@gmail.com',
-  },
+  '대표이사 : 이 강 | 사업자등록번호 : 701-88-03409',
+  '이메일: thekingscompany17@naver.com | thekingscompany23@naver.com',
+  '주소 : 경기도 고양시 덕양구 으뜸로 130 (덕은동)',
+  '개인정보관리책임자 : 임승환 tmdghks0615@gmail.com',
 ]
 
 const footerTextSx = {
   color: '#6b7280',
   fontSize: { xs: '0.72rem', md: '0.8rem' },
-  lineHeight: 1.55,
+  lineHeight: 1.35,
 }
 
 export default function MainFooter() {
@@ -25,74 +23,65 @@ export default function MainFooter() {
       component="footer"
       sx={{
         width: '100%',
+        bgcolor: '#f3f4f6',
         borderTop: '1px solid #e5e7eb',
-        mt: { xs: 6, md: 8 },
-        pt: { xs: 4, md: 5 },
-        pb: { xs: 6, md: 8 },
+        mt: { xs: 2, md: 4 },
+        pt: { xs: 2, md: 3 },
+        pb: { xs: 1, md: 1 },
       }}
     >
       <ContentContainer>
-        <Stack spacing={{ xs: 3.5, md: 5 }}>
-          <Grid container spacing={{ xs: 3, md: 6 }}>
-            <Grid size={{ xs: 12, md: 6.5 }}>
-              <Stack spacing={2}>
-                {companyInfo.map(({ label, value, emphasized }) => (
-                  <Grid
-                    container
-                    key={label}
-                    spacing={2}
-                    sx={{
-                      alignItems: 'start',
-                    }}
-                  >
-                    <Grid size={{ xs: 12, sm: 4 }}>
-                      <Typography
-                        sx={{
-                          ...footerTextSx,
-                        }}
-                      >
-                        {label}
-                      </Typography>
-                    </Grid>
-                    <Grid size={{ xs: 12, sm: 8 }}>
-                      <Typography
-                        sx={{
-                          ...footerTextSx,
-                          textDecoration: emphasized ? 'underline' : 'none',
-                          textUnderlineOffset: emphasized ? '3px' : undefined,
-                        }}
-                      >
-                        {value}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                ))}
-              </Stack>
+        <Stack>
+          <Grid container alignItems="center">
+            <Grid size={{ xs: 4, sm: 3, md: 2 }}>
+              <Box
+                sx={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  lineHeight: 0,
+                }}
+              >
+                <Image
+                  src="/logo/thekingsfulllogo.png"
+                  width={150}
+                  height={150}
+                  alt="THE KINGS COMPANY"
+                  style={{
+                    height: 'auto',
+                  }}
+                />
+              </Box>
             </Grid>
 
-            <Grid size={{ xs: 12, md: 5.5 }}>
-              <Stack spacing={1}>
+            <Grid size={{ xs: 8, sm: 9, md: 10 }} sx={{}}>
+              <Stack spacing={0.65}>
                 <Typography
                   sx={{
-                    ...footerTextSx,
+                    color: '#111827',
+                    fontSize: { xs: '0.78rem', md: '0.88rem' },
+                    fontWeight: 700,
+                    lineHeight: 1.35,
                   }}
                 >
-                  경기도 고양시 덕양구 으뜸로 130 (덕은동)
+                  더킹즈컴퍼니
                 </Typography>
 
-                <Box sx={{ flexGrow: 1 }} />
-
-                <Stack spacing={0.75}>
-                  <Typography
-                    sx={{
-                      color: '#9ca3af',
-                      fontSize: { xs: '0.68rem', md: '0.76rem' },
-                      lineHeight: 1.5,
-                    }}
-                  >
-                    COPYRIGHTS(C) 2026 THE KINGS COMPANY ALL RIGHTS RESERVED.
+                {companyInfo.map((text) => (
+                  <Typography key={text} sx={footerTextSx}>
+                    {text}
                   </Typography>
-                </Stack>
+                ))}
+
+                <Typography
+                  sx={{
+                    color: '#9ca3af',
+                    fontSize: { xs: '0.68rem', md: '0.76rem' },
+                    lineHeight: 1.35,
+                    pt: 0.35,
+                  }}
+                >
+                  COPYRIGHTS(C) 2026 THE KINGS COMPANY ALL RIGHTS RESERVED.
+                </Typography>
               </Stack>
             </Grid>
           </Grid>
