@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { Box, Stack, Typography } from '@mui/material'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import FallbackImage from '../image/FallbackImage'
+import AppImage from '../image/AppImage'
 
 export default function TitledProducts({ title = 'Popular Products', products = [] }) {
   return (
@@ -15,10 +15,10 @@ export default function TitledProducts({ title = 'Popular Products', products = 
       }}
     >
       <Typography
-        component="h2"
+        component="h3"
         sx={{
           color: '#111827',
-          fontSize: { xs: '1.5rem', md: '2rem' },
+          fontSize: { xs: '1rem', md: '1.3rem' },
           fontWeight: 700,
           lineHeight: 1.2,
         }}
@@ -47,17 +47,7 @@ export default function TitledProducts({ title = 'Popular Products', products = 
       >
         {products.map(
           (
-            {
-              brandName,
-              brandLink,
-              name,
-              price,
-              discountRate,
-              finalPrice,
-              imageSrc,
-              link,
-              optionNames = [],
-            },
+            { brandName, brandLink, name, price, finalPrice, imageSrc, link, optionNames = [] },
             index
           ) => (
             <SwiperSlide key={`${name}-${index}`} style={{ width: 'auto' }}>
@@ -86,7 +76,7 @@ export default function TitledProducts({ title = 'Popular Products', products = 
                         overflow: 'hidden',
                       }}
                     >
-                      <FallbackImage
+                      <AppImage
                         unoptimized
                         src={imageSrc}
                         alt={name || ''}
@@ -109,7 +99,7 @@ export default function TitledProducts({ title = 'Popular Products', products = 
                       sx={{
                         alignSelf: 'flex-start',
                         color: '#6b7280',
-                        fontSize: { xs: '0.78rem', sm: '0.82rem' },
+                        fontSize: { xs: '0.7rem', sm: '0.75rem' },
                         fontWeight: 700,
                         lineHeight: 1.2,
                         textDecoration: 'none',
@@ -124,12 +114,12 @@ export default function TitledProducts({ title = 'Popular Products', products = 
                     href={link}
                     sx={{
                       color: '#111827',
-                      fontSize: { xs: '1rem', md: '1.08rem' },
+                      fontSize: { xs: '0.9rem', md: '1rem' },
                       fontWeight: 700,
                       lineHeight: 1.35,
                       display: '-webkit-box',
                       overflow: 'hidden',
-                      minHeight: '2.7em',
+                      minHeight: '2em',
                       textDecoration: 'none',
                       WebkitLineClamp: 2,
                       WebkitBoxOrient: 'vertical',
@@ -158,7 +148,7 @@ export default function TitledProducts({ title = 'Popular Products', products = 
                             border: '1px solid #e5e7eb',
                             borderRadius: 1,
                             color: '#4b5563',
-                            fontSize: '0.72rem',
+                            fontSize: '0.7rem',
                             fontWeight: 600,
                             lineHeight: 1.2,
                             overflow: 'hidden',
@@ -178,7 +168,7 @@ export default function TitledProducts({ title = 'Popular Products', products = 
                             border: '1px solid #e5e7eb',
                             borderRadius: 1,
                             color: '#6b7280',
-                            fontSize: '0.72rem',
+                            fontSize: '0.7rem',
                             fontWeight: 600,
                             lineHeight: 1.2,
                             px: 0.75,
@@ -193,22 +183,10 @@ export default function TitledProducts({ title = 'Popular Products', products = 
                 </Stack>
 
                 <Stack direction="row" spacing={0.75} alignItems="baseline">
-                  {discountRate ? (
-                    <Typography
-                      sx={{
-                        color: '#ff5a5f',
-                        fontSize: { xs: '0.95rem', md: '1rem' },
-                        fontWeight: 700,
-                        lineHeight: 1,
-                      }}
-                    >
-                      {discountRate}
-                    </Typography>
-                  ) : null}
                   <Typography
                     sx={{
                       color: '#111827',
-                      fontSize: { xs: '1.12rem', md: '1.2rem' },
+                      fontSize: { xs: '0.85rem', md: '0.9rem' },
                       fontWeight: 800,
                       lineHeight: 1,
                     }}

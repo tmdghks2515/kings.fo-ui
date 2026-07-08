@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { Alert, Box, Button, CircularProgress, Divider, Stack, Typography } from '@mui/material'
 import ContentContainer from '@/components/layout/ContentContainer'
-import FallbackImage from '@/components/image/FallbackImage'
+import AppImage from '@/components/image/AppImage'
 import { API_BASE_URL } from '@/api/httpClient'
 import { brandService } from '@/api/brand/brandService'
 
@@ -98,7 +98,7 @@ export default function BrandDetailPage() {
           bgcolor: '#111827',
         }}
       >
-        <FallbackImage
+        <AppImage
           src={heroImageSrc}
           fallbackSrc={EMPTY_HERO_SRC}
           alt={`${brand.name} 대표 이미지`}
@@ -143,7 +143,7 @@ export default function BrandDetailPage() {
                 overflow: 'hidden',
               }}
             >
-              <FallbackImage
+              <AppImage
                 src={logoImageSrc}
                 fallbackSrc={EMPTY_LOGO_SRC}
                 alt={`${brand.name} 로고`}

@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useQuery } from '@tanstack/react-query'
 import { Alert, Box, CircularProgress, Stack, Typography } from '@mui/material'
 import ContentContainer from '@/components/layout/ContentContainer'
-import FallbackImage from '@/components/image/FallbackImage'
+import AppImage from '@/components/image/AppImage'
 import { API_BASE_URL } from '@/api/httpClient'
 import { categoryService } from '@/api/category/categoryService'
 import { productService } from '@/api/product/productService'
@@ -191,7 +191,7 @@ function ProductCard({ product }) {
           overflow: 'hidden',
         }}
       >
-        <FallbackImage
+        <AppImage
           src={toProductImageSrc(product)}
           fallbackSrc={EMPTY_PRODUCT_SRC}
           alt={product.name || '상품 이미지'}

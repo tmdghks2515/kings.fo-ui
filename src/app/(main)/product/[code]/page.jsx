@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { Alert, Box, Button, CircularProgress, Divider, Stack, Typography } from '@mui/material'
 import ContentContainer from '@/components/layout/ContentContainer'
-import FallbackImage from '@/components/image/FallbackImage'
+import AppImage from '@/components/image/AppImage'
 import { API_BASE_URL } from '@/api/httpClient'
 import { productService } from '@/api/product/productService'
 
@@ -170,7 +170,7 @@ export default function ProductDetailPage() {
                   overflow: 'hidden',
                 }}
               >
-                <FallbackImage
+                <AppImage
                   src={selectedImage?.imageSrc}
                   fallbackSrc={EMPTY_PRODUCT_SRC}
                   alt={selectedImage?.alt || product.name}
@@ -204,7 +204,7 @@ export default function ProductDetailPage() {
                         p: 0,
                       }}
                     >
-                      <FallbackImage
+                      <AppImage
                         src={image.imageSrc}
                         fallbackSrc={EMPTY_PRODUCT_SRC}
                         alt=""
@@ -432,7 +432,7 @@ export default function ProductDetailPage() {
                         overflow: 'hidden',
                       }}
                     >
-                      <FallbackImage
+                      <AppImage
                         src={toImageSrc(image)}
                         fallbackSrc={EMPTY_PRODUCT_SRC}
                         alt={image.originalName || `${product.name} 상세 이미지 ${index + 1}`}

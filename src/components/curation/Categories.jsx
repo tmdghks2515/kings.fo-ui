@@ -1,26 +1,66 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { Box, Stack, Typography } from '@mui/material'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import FallbackImage from '../image/FallbackImage'
+import AppImage from '../image/AppImage'
+import SliderArrowButton from '../button/SliderArrowButton'
 
 export default function Categories({ categories = [] }) {
+  const [swiper, setSwiper] = useState(null)
+  const [isBeginning, setIsBeginning] = useState(true)
+  const [isEnd, setIsEnd] = useState(false)
+
+  const updateNavigationState = (swiperInstance) => {
+    setIsBeginning(swiperInstance.isBeginning)
+    setIsEnd(swiperInstance.isEnd)
+  }
+
   return (
     <Box
       sx={{
+        position: 'relative',
         width: '100%',
         minWidth: 0,
+        px: { xs: 4.5, sm: 5 },
         pt: 1,
       }}
     >
+      <SliderArrowButton
+        direction="prev"
+        aria-label="이전 카테고리"
+        disabled={isBeginning}
+        onClick={() => swiper?.slidePrev()}
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: 0,
+          zIndex: 2,
+          transform: 'translateY(-50%)',
+        }}
+      />
+
       <Swiper
+        onSwiper={(swiperInstance) => {
+          setSwiper(swiperInstance)
+          updateNavigationState(swiperInstance)
+        }}
+        onSlideChange={updateNavigationState}
+        onReachBeginning={updateNavigationState}
+        onReachEnd={updateNavigationState}
+        onFromEdge={updateNavigationState}
+        onBreakpoint={updateNavigationState}
+        onUpdate={updateNavigationState}
+        onAfterInit={(swiperInstance) => {
+          updateNavigationState(swiperInstance)
+        }}
         style={{
           width: '100%',
           maxWidth: '100%',
         }}
         slidesPerView="auto"
-        spaceBetween={16}
+        spaceBetween={12}
         breakpoints={{
           600: {
             spaceBetween: 20,
@@ -45,30 +85,29 @@ export default function Categories({ categories = [] }) {
               style={{ color: 'inherit', textDecoration: 'none', display: 'block' }}
             >
               <Stack
-                spacing={{ xs: 1.5, sm: 2 }}
+                spacing={0.5}
                 alignItems="center"
                 sx={{
-                  width: { xs: 92, sm: 132, md: 156, lg: 164 },
+                  width: { xs: 60, sm: 80, md: 100, lg: 100 },
                 }}
               >
                 <Box
                   sx={{
-                    width: { xs: 92, sm: 132, md: 156, lg: 164 },
-                    height: { xs: 92, sm: 132, md: 156, lg: 164 },
+                    width: { xs: 60, sm: 80, md: 100, lg: 100 },
+                    height: { xs: 60, sm: 80, md: 100, lg: 100 },
                     borderRadius: '50%',
-                    backgroundColor: '#f7f7f7',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     overflow: 'hidden',
                   }}
                 >
-                  <FallbackImage
+                  <AppImage
                     unoptimized
                     src={imageSrc}
                     alt={label || ''}
-                    width={180}
-                    height={180}
+                    width={130}
+                    height={130}
                     style={{
                       width: '74%',
                       height: '74%',
@@ -80,7 +119,7 @@ export default function Categories({ categories = [] }) {
                 <Typography
                   sx={{
                     color: '#1f2937',
-                    fontSize: { xs: '0.95rem', sm: '1.15rem' },
+                    fontSize: { xs: '0.75rem', sm: '0.8rem' },
                     fontWeight: 400,
                     lineHeight: 1.2,
                     textAlign: 'center',
@@ -94,6 +133,20 @@ export default function Categories({ categories = [] }) {
           </SwiperSlide>
         ))}
       </Swiper>
+
+      <SliderArrowButton
+        direction="next"
+        aria-label="다음 카테고리"
+        disabled={isEnd}
+        onClick={() => swiper?.slideNext()}
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          right: 0,
+          zIndex: 2,
+          transform: 'translateY(-50%)',
+        }}
+      />
     </Box>
   )
 }

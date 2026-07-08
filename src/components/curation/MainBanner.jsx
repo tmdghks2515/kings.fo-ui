@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { Box, Card, Typography } from '@mui/material'
 import { Autoplay, EffectFade, Pagination } from 'swiper/modules'
 import Link from 'next/link'
-import FallbackImage from '../image/FallbackImage'
+import AppImage from '../image/AppImage'
 
 export default function MainBanner({ items = [] }) {
   return (
@@ -43,7 +43,7 @@ export default function MainBanner({ items = [] }) {
                   }}
                 >
                   <Box sx={{ position: 'relative', aspectRatio: '16 / 7' }}>
-                    <FallbackImage
+                    <AppImage
                       unoptimized
                       src={imageSrc}
                       alt={title || ''}
