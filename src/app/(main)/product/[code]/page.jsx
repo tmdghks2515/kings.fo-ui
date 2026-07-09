@@ -160,7 +160,14 @@ export default function ProductDetailPage() {
             spacing={{ xs: 3.5, md: 7 }}
             alignItems={{ xs: 'stretch', md: 'flex-start' }}
           >
-            <Stack spacing={1.5} sx={{ flex: 1, minWidth: 0 }}>
+            <Stack
+              spacing={1.5}
+              sx={{
+                width: { xs: '100%', md: 560 },
+                flex: { xs: '1 1 auto', md: '0 1 560px' },
+                minWidth: 0,
+              }}
+            >
               <Box
                 sx={{
                   position: 'relative',
@@ -308,12 +315,6 @@ export default function ProductDetailPage() {
                       {product.code}
                     </Typography>
                   </Stack>
-                  <Stack direction="row" justifyContent="space-between" spacing={2}>
-                    <Typography sx={{ color: '#64748b', fontSize: 14 }}>배송</Typography>
-                    <Typography sx={{ color: '#111827', fontSize: 14, fontWeight: 700 }}>
-                      기본 배송
-                    </Typography>
-                  </Stack>
                 </Stack>
 
                 {optionGroups.length > 0 ? (
@@ -402,19 +403,16 @@ export default function ProductDetailPage() {
             <Stack spacing={3}>
               <Stack spacing={0.75}>
                 <Typography
-                  component="h2"
+                  component="h3"
                   sx={{
                     color: '#111827',
-                    fontSize: { xs: 24, md: 32 },
+                    fontSize: { xs: 14, md: 20 },
                     fontWeight: 700,
                     lineHeight: 1.25,
                     letterSpacing: 0,
                   }}
                 >
-                  Product Detail
-                </Typography>
-                <Typography sx={{ color: '#64748b', fontSize: 15, lineHeight: 1.7 }}>
-                  상품의 소재감, 구성, 사용 장면을 상세 이미지로 확인해보세요.
+                  제품 상세
                 </Typography>
               </Stack>
 
@@ -424,10 +422,8 @@ export default function ProductDetailPage() {
                     <Box
                       key={`${image.storageKey}-${index}`}
                       sx={{
-                        position: 'relative',
                         width: '100%',
-                        maxWidth: 960,
-                        aspectRatio: { xs: '4 / 5', md: '16 / 10' },
+                        maxWidth: 860,
                         bgcolor: '#f3f4f6',
                         overflow: 'hidden',
                       }}
@@ -436,10 +432,16 @@ export default function ProductDetailPage() {
                         src={toImageSrc(image)}
                         fallbackSrc={EMPTY_PRODUCT_SRC}
                         alt={image.originalName || `${product.name} 상세 이미지 ${index + 1}`}
-                        fill
-                        sizes="(max-width: 960px) 100vw, 960px"
+                        width={860}
+                        height={1290}
+                        sizes="(max-width: 860px) 100vw, 860px"
                         unoptimized
-                        style={{ objectFit: 'contain' }}
+                        style={{
+                          width: '100%',
+                          height: 'auto',
+                          display: 'block',
+                          objectFit: 'contain',
+                        }}
                       />
                     </Box>
                   ))}

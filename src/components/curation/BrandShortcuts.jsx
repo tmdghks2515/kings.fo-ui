@@ -20,7 +20,7 @@ export default function BrandShortcuts({ brands = [] }) {
           component="h3"
           sx={{
             color: '#ffffff',
-            fontSize: { xs: '1.45rem', md: '2rem' },
+            fontSize: { xs: '1.2rem', md: '1.55rem' },
             fontWeight: 800,
             lineHeight: 1.2,
             textAlign: 'center',
@@ -33,7 +33,7 @@ export default function BrandShortcuts({ brands = [] }) {
         <Box
           sx={{
             display: 'grid',
-            gap: { xs: 1.25, md: 2 },
+            gap: { xs: 1, md: 1.25 },
             gridTemplateColumns: {
               xs: 'repeat(2, minmax(0, 1fr))',
               sm: 'repeat(3, minmax(0, 1fr))',
@@ -64,10 +64,10 @@ function BrandTile({ brand }) {
         borderRadius: 2,
         color: '#ffffff',
         display: 'flex',
-        height: { xs: 72, md: 88 },
+        height: { xs: 58, md: 68 },
         justifyContent: 'center',
         minWidth: 0,
-        px: 2,
+        px: { xs: 1.5, md: 1.75 },
         textDecoration: 'none',
       }}
     >
@@ -76,8 +76,8 @@ function BrandTile({ brand }) {
           sx={{
             position: 'relative',
             width: '100%',
-            maxWidth: 128,
-            height: 36,
+            maxWidth: 104,
+            height: 28,
           }}
         >
           <AppImage
@@ -96,7 +96,7 @@ function BrandTile({ brand }) {
         <Typography
           sx={{
             color: '#ffffff',
-            fontSize: { xs: '1rem', md: '1.15rem' },
+            fontSize: { xs: '0.9rem', md: '1rem' },
             fontWeight: 800,
             lineHeight: 1.2,
             overflow: 'hidden',

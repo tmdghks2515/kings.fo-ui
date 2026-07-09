@@ -2,8 +2,19 @@
 
 import { useMemo } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
-import { Alert, Box, CircularProgress, Stack, Typography } from '@mui/material'
+import {
+  Alert,
+  Box,
+  CircularProgress,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  Typography,
+} from '@mui/material'
 import ContentContainer from '@/components/layout/ContentContainer'
 import AppImage from '@/components/image/AppImage'
 import { API_BASE_URL } from '@/api/httpClient'
@@ -104,8 +115,25 @@ const toOptionNames = (product) =>
     .map((option) => option?.name)
     .filter(Boolean)
 
+const ALL_CATEGORY_VALUE = 'all'
+
 function CategoryDepthSelector({ levels, selectedPath }) {
-  const selectedIds = new Set(selectedPath.map((category) => String(category.id)))
+  const router = useRouter()
+
+  const handleCategoryChange = (event, levelIndex) => {
+    const categoryId = event.target.value
+
+    if (categoryId === ALL_CATEGORY_VALUE) {
+      const parentCategory = selectedPath[levelIndex - 1]
+
+      router.push(parentCategory?.id ? `/category/${parentCategory.id}` : '/category')
+      return
+    }
+
+    if (categoryId) {
+      router.push(`/category/${categoryId}`)
+    }
+  }
 
   return (
     <Box
@@ -113,62 +141,67 @@ function CategoryDepthSelector({ levels, selectedPath }) {
         display: 'grid',
         gridTemplateColumns: {
           xs: '1fr',
-          md: `repeat(${Math.min(levels.length, 3)}, minmax(0, 1fr))`,
+          md: `repeat(${Math.min(levels.length, 3)}, minmax(180px, 240px))`,
         },
+        justifyContent: 'start',
         gap: { xs: 1.5, md: 2 },
       }}
     >
       {levels.map((categories, levelIndex) => (
-        <Stack
+        <FormControl
           key={`level-${levelIndex}`}
-          spacing={1}
+          size="small"
           sx={{
+            width: { xs: '100%', md: 240 },
             minWidth: 0,
-            borderTop: '1px solid rgba(17, 24, 39, 0.12)',
-            pt: 1.5,
           }}
         >
-          <Typography
+          <InputLabel id={`category-level-${levelIndex + 1}-label`}>
+            카테고리 {levelIndex + 1}
+          </InputLabel>
+          <Select
+            labelId={`category-level-${levelIndex + 1}-label`}
+            value={
+              selectedPath[levelIndex]?.id
+                ? String(selectedPath[levelIndex].id)
+                : ALL_CATEGORY_VALUE
+            }
+            label={`카테고리 ${levelIndex + 1}`}
+            onChange={(event) => handleCategoryChange(event, levelIndex)}
             sx={{
-              color: '#94a3b8',
-              fontSize: 12,
+              bgcolor: '#fff',
+              fontSize: 14,
               fontWeight: 700,
-              letterSpacing: 0,
+              '& .MuiSelect-select': {
+                minHeight: '1.45em',
+              },
             }}
           >
-            Depth {levelIndex + 1}
-          </Typography>
-
-          <Stack direction="row" spacing={0.75} useFlexGap sx={{ flexWrap: 'wrap' }}>
+            <MenuItem
+              value={ALL_CATEGORY_VALUE}
+              sx={{
+                fontSize: 14,
+                fontWeight: 600,
+              }}
+            >
+              전체
+            </MenuItem>
             {categories.map((category) => {
-              const selected = selectedIds.has(String(category.id))
-
               return (
-                <Box
+                <MenuItem
                   key={category.id}
-                  component={Link}
-                  href={`/category/${category.id}`}
+                  value={String(category.id)}
                   sx={{
-                    border: '1px solid',
-                    borderColor: selected ? '#111827' : 'rgba(17, 24, 39, 0.12)',
-                    color: selected ? '#fff' : '#111827',
-                    bgcolor: selected ? '#111827' : '#fff',
                     fontSize: 14,
-                    fontWeight: 700,
-                    lineHeight: 1.2,
-                    maxWidth: '100%',
-                    overflowWrap: 'anywhere',
-                    px: 1.5,
-                    py: 1,
-                    textDecoration: 'none',
+                    fontWeight: 600,
                   }}
                 >
                   {category.name}
-                </Box>
+                </MenuItem>
               )
             })}
-          </Stack>
-        </Stack>
+          </Select>
+        </FormControl>
       ))}
     </Box>
   )
@@ -368,6 +401,12 @@ export default function CategoryProductBrowser({ selectedCategoryId }) {
       >
         <ContentContainer sx={{ py: { xs: 4, md: 6 } }}>
           <Stack spacing={3}>
+            {categoryLevels.length > 0 ? (
+              <CategoryDepthSelector levels={categoryLevels} selectedPath={selectedPath} />
+            ) : (
+              <Alert severity="info">등록된 카테고리가 없습니다.</Alert>
+            )}
+
             <Stack spacing={1.25}>
               <Typography
                 sx={{
@@ -384,9 +423,9 @@ export default function CategoryProductBrowser({ selectedCategoryId }) {
                 component="h1"
                 sx={{
                   color: '#111827',
-                  fontSize: { xs: 34, md: 56 },
+                  fontSize: { xs: 26, md: 40 },
                   fontWeight: 700,
-                  lineHeight: 1.05,
+                  lineHeight: 1.15,
                   letterSpacing: 0,
                   overflowWrap: 'anywhere',
                 }}
@@ -399,12 +438,6 @@ export default function CategoryProductBrowser({ selectedCategoryId }) {
                   : '카테고리를 선택하면 상품 목록이 표시됩니다.'}
               </Typography>
             </Stack>
-
-            {categoryLevels.length > 0 ? (
-              <CategoryDepthSelector levels={categoryLevels} selectedPath={selectedPath} />
-            ) : (
-              <Alert severity="info">등록된 카테고리가 없습니다.</Alert>
-            )}
           </Stack>
         </ContentContainer>
       </Box>
@@ -431,7 +464,7 @@ export default function CategoryProductBrowser({ selectedCategoryId }) {
                 카테고리를 선택해 주세요.
               </Typography>
               <Typography sx={{ color: '#64748b', fontSize: 14, textAlign: 'center' }}>
-                상단에서 depth별 카테고리를 선택하면 해당 상품을 볼 수 있습니다.
+                상단에서 카테고리를 선택하면 해당 상품을 볼 수 있습니다.
               </Typography>
             </Stack>
           </Box>

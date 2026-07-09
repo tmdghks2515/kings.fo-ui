@@ -4,15 +4,16 @@ import { useEffect, useRef, useState } from 'react'
 import { Box, Stack } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 const NAV_ITEMS = [
-  { label: 'Brand', href: '/category' },
-  { label: 'Category', href: '/category' },
-  { label: 'Product', href: '/' },
-  { label: 'Contact Us', href: '/' },
+  { label: 'Brand', href: '/category', activePaths: ['/brand'] },
+  { label: 'Category', href: '/category', activePaths: ['/category'] },
+  { label: 'Contact Us', href: '/', activePaths: ['/contact'] },
 ]
 
 export default function MainHeader() {
+  const pathname = usePathname()
   const lastScrollYRef = useRef(0)
   const [isVisible, setIsVisible] = useState(true)
 
@@ -100,47 +101,58 @@ export default function MainHeader() {
             rowGap: 0.5,
           }}
         >
-          {NAV_ITEMS.map((item) => (
-            <Box
-              key={item.label}
-              component={Link}
-              href={item.href}
-              sx={{
-                position: 'relative',
-                px: { xs: 1.4, sm: 1.8 },
-                py: 1,
-                color: '#1f2937',
-                fontSize: { xs: 13, sm: 14 },
-                fontWeight: 600,
-                lineHeight: 1,
-                transition: 'color 160ms ease',
-                whiteSpace: 'nowrap',
-                '&::after': {
-                  content: '""',
-                  position: 'absolute',
-                  left: '50%',
-                  bottom: 2,
-                  width: 'calc(100% - 28px)',
-                  height: '2px',
-                  borderRadius: 999,
-                  bgcolor: '#111827',
-                  opacity: 0,
-                  transform: 'translateX(-50%) scaleX(0.35)',
-                  transformOrigin: 'center',
-                  transition: 'opacity 180ms ease, transform 180ms ease',
-                },
-                '&:hover': {
-                  color: '#111827',
-                },
-                '&:hover::after': {
-                  opacity: 1,
-                  transform: 'translateX(-50%) scaleX(1)',
-                },
-              }}
-            >
-              {item.label}
-            </Box>
-          ))}
+          {NAV_ITEMS.map((item) => {
+            const isActive = item.activePaths.some((activePath) => {
+              if (activePath === '/') {
+                return pathname === '/'
+              }
+
+              return pathname === activePath || pathname?.startsWith(`${activePath}/`)
+            })
+
+            return (
+              <Box
+                key={item.label}
+                component={Link}
+                href={item.href}
+                aria-current={isActive ? 'page' : undefined}
+                sx={{
+                  position: 'relative',
+                  px: { xs: 1.4, sm: 1.8 },
+                  py: 1,
+                  color: isActive ? '#111827' : '#1f2937',
+                  fontSize: { xs: 13, sm: 14 },
+                  fontWeight: 600,
+                  lineHeight: 1,
+                  transition: 'color 160ms ease',
+                  whiteSpace: 'nowrap',
+                  '&::after': {
+                    content: '""',
+                    position: 'absolute',
+                    left: '50%',
+                    bottom: 2,
+                    width: 'calc(100% - 28px)',
+                    height: '2px',
+                    borderRadius: 999,
+                    bgcolor: '#111827',
+                    opacity: isActive ? 1 : 0,
+                    transform: `translateX(-50%) scaleX(${isActive ? 1 : 0.35})`,
+                    transformOrigin: 'center',
+                    transition: 'opacity 180ms ease, transform 180ms ease',
+                  },
+                  '&:hover': {
+                    color: '#111827',
+                  },
+                  '&:hover::after': {
+                    opacity: 1,
+                    transform: 'translateX(-50%) scaleX(1)',
+                  },
+                }}
+              >
+                {item.label}
+              </Box>
+            )
+          })}
         </Stack>
       </Stack>
     </Box>

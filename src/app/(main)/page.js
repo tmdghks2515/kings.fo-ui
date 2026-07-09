@@ -3,6 +3,7 @@
 import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import MainBanner from '@/components/curation/MainBanner'
+import NormalBanner from '@/components/curation/NormalBanner'
 import Categories from '@/components/curation/Categories'
 import TitledProducts from '@/components/curation/TitledProducts'
 import ImageProducts from '@/components/curation/ImageProducts'
@@ -61,11 +62,12 @@ const formatPrice = (price) => {
 
 const toMainBannerItems = (detail) =>
   (Array.isArray(detail?.items) ? detail.items : []).map((item) => ({
-    title: item.title ?? '',
-    subTitle: item.description ?? '',
     link: toLinkHref(item.link),
     imageSrc: toImageSrc(item.imageStorageKey),
+    name: item.name ?? '',
   }))
+
+const toNormalBannerItems = toMainBannerItems
 
 const toCategoryItems = (detail) =>
   (Array.isArray(detail?.items) ? detail.items : []).map((item) => ({
@@ -102,6 +104,9 @@ const renderCurationContent = (curation) => {
   if (curation.type === 'MAIN_BANNER') {
     return <MainBanner items={toMainBannerItems(curation.detail)} />
   }
+  if (curation.type === 'NORMAL_BANNER') {
+    return <NormalBanner items={toNormalBannerItems(curation.detail)} />
+  }
   if (curation.type === 'CATEGORIES') {
     return <Categories categories={toCategoryItems(curation.detail)} />
   }
@@ -131,17 +136,31 @@ const renderCurationContent = (curation) => {
   return null
 }
 
-const renderCuration = (curation) => {
+const renderCuration = (curation, index, curations) => {
   const content = renderCurationContent(curation)
 
   if (!content) {
     return null
   }
-  if (curation.type === 'MAIN_BANNER') {
-    return <Box key={curation.id}>{content}</Box>
+  const isLast = index === curations.length - 1
+  const spacingSx = {
+    mt: 0,
+    mb: isLast ? 0 : { xs: 6, md: 10 },
   }
 
-  return <ContentContainer key={curation.id}>{content}</ContentContainer>
+  if (curation.type === 'MAIN_BANNER') {
+    return (
+      <Box key={curation.id} sx={spacingSx}>
+        {content}
+      </Box>
+    )
+  }
+
+  return (
+    <ContentContainer key={curation.id} sx={spacingSx}>
+      {content}
+    </ContentContainer>
+  )
 }
 
 const sortCurations = (curations) =>
@@ -184,7 +203,7 @@ export default function MainPage() {
   }
 
   return (
-    <Stack spacing={10} sx={{ width: '100%', overflowX: 'hidden', pb: 6 }}>
+    <Stack spacing={0} sx={{ width: '100%', overflowX: 'hidden', pb: 6 }}>
       {curations.map(renderCuration)}
     </Stack>
   )

@@ -1,7 +1,7 @@
 'use client'
 
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { Box, Card, Typography } from '@mui/material'
+import { Box, Card } from '@mui/material'
 import { Autoplay, EffectFade, Pagination } from 'swiper/modules'
 import Link from 'next/link'
 import AppImage from '../image/AppImage'
@@ -29,9 +29,7 @@ export default function MainBanner({ items = [] }) {
         autoplay={{ delay: 3000 }}
         loop
       >
-        {items.map(({ title, subTitle, link, imageSrc }, index) => {
-          const hasText = Boolean(String(title ?? '').trim() || String(subTitle ?? '').trim())
-
+        {items.map(({ link, imageSrc }, index) => {
           return (
             <SwiperSlide key={index}>
               <Link href={link} style={{ display: 'block' }}>
@@ -46,7 +44,7 @@ export default function MainBanner({ items = [] }) {
                     <AppImage
                       unoptimized
                       src={imageSrc}
-                      alt={title || ''}
+                      alt=""
                       width={1280}
                       height={560}
                       style={{
@@ -56,57 +54,6 @@ export default function MainBanner({ items = [] }) {
                         display: 'block',
                       }}
                     />
-                    {hasText ? (
-                      <>
-                        <Box
-                          sx={{
-                            position: 'absolute',
-                            inset: 0,
-                            background:
-                              'linear-gradient(90deg, rgba(15,23,42,0.36) 0%, rgba(15,23,42,0.18) 42%, rgba(15,23,42,0.04) 100%)',
-                          }}
-                        />
-                        <Box
-                          sx={{
-                            position: 'absolute',
-                            left: { xs: 20, sm: 32, md: 48 },
-                            right: { xs: 20, sm: 32, md: '40%' },
-                            bottom: { xs: 20, sm: 28, md: 40 },
-                            display: 'grid',
-                            gap: 1,
-                            color: '#fff',
-                          }}
-                        >
-                          {subTitle && (
-                            <Typography
-                              variant="subtitle1"
-                              sx={{
-                                fontWeight: 500,
-                                opacity: 0.92,
-                              }}
-                            >
-                              {subTitle}
-                            </Typography>
-                          )}
-                          {title && (
-                            <Typography
-                              variant="h3"
-                              sx={{
-                                fontWeight: 700,
-                                lineHeight: 1.15,
-                                fontSize: {
-                                  xs: '1.75rem',
-                                  sm: '2.25rem',
-                                  md: '3rem',
-                                },
-                              }}
-                            >
-                              {title}
-                            </Typography>
-                          )}
-                        </Box>
-                      </>
-                    ) : null}
                   </Box>
                 </Card>
               </Link>
