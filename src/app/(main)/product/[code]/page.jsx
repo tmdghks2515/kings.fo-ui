@@ -348,7 +348,7 @@ export default function ProductDetailPage() {
                               }}
                             >
                               {option.name}
-                              {option.price ? ` · +${formatPrice(option.price)}` : ''}
+                              {option.price ? ` · ${formatPrice(option.price)}` : ''}
                             </Box>
                           ))}
                         </Stack>
@@ -356,39 +356,6 @@ export default function ProductDetailPage() {
                     ))}
                   </Stack>
                 ) : null}
-
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.25}>
-                  <Button
-                    variant="outlined"
-                    size="large"
-                    sx={{
-                      flex: 1,
-                      borderRadius: 0,
-                      borderColor: '#111827',
-                      color: '#111827',
-                      '&:hover': {
-                        borderColor: '#111827',
-                        bgcolor: 'rgba(17, 24, 39, 0.04)',
-                      },
-                    }}
-                  >
-                    장바구니
-                  </Button>
-                  <Button
-                    variant="contained"
-                    size="large"
-                    sx={{
-                      flex: 1,
-                      borderRadius: 0,
-                      bgcolor: '#111827',
-                      '&:hover': {
-                        bgcolor: '#0f172a',
-                      },
-                    }}
-                  >
-                    구매하기
-                  </Button>
-                </Stack>
               </Stack>
             </Box>
           </Stack>

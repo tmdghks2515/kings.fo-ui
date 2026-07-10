@@ -143,9 +143,21 @@ const renderCuration = (curation, index, curations) => {
     return null
   }
   const isLast = index === curations.length - 1
-  const spacingSx = {
-    mt: 0,
-    mb: isLast ? 0 : { xs: 6, md: 10 },
+
+  const spacingSx = {}
+
+  if (curation.type === 'MAIN_BANNER') {
+    spacingSx.pb = 1
+  } else if (curation.type === 'CATEGORIES') {
+    spacingSx.py = { xs: 1, md: 2 }
+  } else if (curation.type === 'BRAND_SHORTCUTS') {
+    spacingSx.py = { xs: 1, md: 2 }
+  } else {
+    spacingSx.py = { xs: 2, md: 5.5 }
+  }
+
+  if (isLast) {
+    spacingSx.pb = 0
   }
 
   if (curation.type === 'MAIN_BANNER') {
@@ -203,7 +215,7 @@ export default function MainPage() {
   }
 
   return (
-    <Stack spacing={0} sx={{ width: '100%', overflowX: 'hidden', pb: 6 }}>
+    <Stack spacing={0} sx={{ width: '100%', overflowX: 'hidden' }}>
       {curations.map(renderCuration)}
     </Stack>
   )

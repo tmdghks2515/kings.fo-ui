@@ -7,9 +7,9 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 const NAV_ITEMS = [
-  { label: 'Brand', href: '/category', activePaths: ['/brand'] },
+  { label: 'Brand', href: '/brand', activePaths: ['/brand'] },
   { label: 'Category', href: '/category', activePaths: ['/category'] },
-  { label: 'Contact Us', href: '/', activePaths: ['/contact'] },
+  { label: 'Contact Us', href: '/contact', activePaths: ['/contact'] },
 ]
 
 export default function MainHeader() {

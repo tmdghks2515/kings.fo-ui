@@ -4,14 +4,19 @@ import { useMemo } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
-import { Alert, Box, Button, CircularProgress, Divider, Stack, Typography } from '@mui/material'
+import { Alert, Box, CircularProgress, Stack, Typography } from '@mui/material'
 import ContentContainer from '@/components/layout/ContentContainer'
 import AppImage from '@/components/image/AppImage'
 import { API_BASE_URL } from '@/api/httpClient'
 import { brandService } from '@/api/brand/brandService'
+import { productService } from '@/api/product/productService'
 
 const brandKeys = {
   detail: (id) => ['brands', id],
+}
+
+const productKeys = {
+  listByBrand: (brandId) => ['products', { brandId }],
 }
 
 const EMPTY_HERO_SRC =
@@ -19,6 +24,9 @@ const EMPTY_HERO_SRC =
 
 const EMPTY_LOGO_SRC =
   'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="360" height="180" viewBox="0 0 360 180"><rect width="360" height="180" rx="18" fill="%23ffffff"/><rect x="56" y="78" width="248" height="24" rx="12" fill="%23d1d5db"/></svg>'
+
+const EMPTY_PRODUCT_SRC =
+  'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="720" height="720" viewBox="0 0 720 720"><rect width="720" height="720" fill="%23f7f7f5"/><rect x="188" y="174" width="344" height="408" rx="18" fill="%23e5e7eb"/><path d="M246 288 L318 222 L404 322 L460 270 L532 356 V582 H188 V360 Z" fill="%23d1d5db"/><circle cx="462" cy="226" r="34" fill="%23cbd5e1"/></svg>'
 
 const toImageSrc = (fileResource, fallbackSrc) => {
   const storageKey = typeof fileResource === 'string' ? fileResource : fileResource?.storageKey
@@ -40,6 +48,145 @@ const toParagraphs = (text) =>
     .map((line) => line.trim())
     .filter(Boolean)
 
+const sortByOrder = (items) =>
+  [...(Array.isArray(items) ? items : [])].sort((first, second) => {
+    const orderComparison = (first.sortOrder ?? 0) - (second.sortOrder ?? 0)
+
+    if (orderComparison !== 0) {
+      return orderComparison
+    }
+
+    return String(first.name ?? first.storageKey ?? '').localeCompare(
+      String(second.name ?? second.storageKey ?? '')
+    )
+  })
+
+const toProductImageSrc = (product) => {
+  const images = sortByOrder(product?.images)
+  const mainImage = images.find((image) => image.main) ?? images[0]
+
+  return toImageSrc(mainImage, EMPTY_PRODUCT_SRC)
+}
+
+const toOptionNames = (product) =>
+  (Array.isArray(product?.options) ? product.options : [])
+    .map((option) => option?.name)
+    .filter(Boolean)
+
+const formatPrice = (price) => {
+  if (price === undefined || price === null || price === '') {
+    return ''
+  }
+
+  return `${Number(price).toLocaleString('ko-KR')}원`
+}
+
+function ProductCard({ product }) {
+  const optionNames = toOptionNames(product)
+
+  return (
+    <Stack spacing={1.35} sx={{ minWidth: 0 }}>
+      <Box
+        component={Link}
+        href={`/product/${encodeURIComponent(product.code)}`}
+        sx={{
+          position: 'relative',
+          width: '100%',
+          aspectRatio: '1 / 1',
+          display: 'block',
+          bgcolor: '#f3f4f6',
+          overflow: 'hidden',
+        }}
+      >
+        <AppImage
+          src={toProductImageSrc(product)}
+          fallbackSrc={EMPTY_PRODUCT_SRC}
+          alt={product.name || '상품 이미지'}
+          fill
+          sizes="(max-width: 600px) 50vw, (max-width: 900px) 33vw, 25vw"
+          unoptimized
+          style={{ objectFit: 'cover' }}
+        />
+      </Box>
+
+      <Stack spacing={0.75} sx={{ minWidth: 0 }}>
+        <Typography
+          component={Link}
+          href={`/product/${encodeURIComponent(product.code)}`}
+          sx={{
+            color: '#111827',
+            display: '-webkit-box',
+            fontSize: { xs: 15, md: 17 },
+            fontWeight: 700,
+            lineHeight: 1.4,
+            minHeight: '2.8em',
+            overflow: 'hidden',
+            textDecoration: 'none',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: 2,
+            wordBreak: 'keep-all',
+          }}
+        >
+          {product.name}
+        </Typography>
+
+        {optionNames.length > 0 ? (
+          <Stack direction="row" spacing={0.5} useFlexGap sx={{ flexWrap: 'wrap', minHeight: 24 }}>
+            {optionNames.slice(0, 3).map((optionName) => (
+              <Box
+                key={optionName}
+                component="span"
+                sx={{
+                  maxWidth: '100%',
+                  border: '1px solid rgba(17, 24, 39, 0.1)',
+                  color: '#475569',
+                  fontSize: 12,
+                  fontWeight: 600,
+                  lineHeight: 1.2,
+                  overflow: 'hidden',
+                  px: 0.75,
+                  py: 0.35,
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {optionName}
+              </Box>
+            ))}
+            {optionNames.length > 3 ? (
+              <Box
+                component="span"
+                sx={{
+                  border: '1px solid rgba(17, 24, 39, 0.1)',
+                  color: '#64748b',
+                  fontSize: 12,
+                  fontWeight: 600,
+                  lineHeight: 1.2,
+                  px: 0.75,
+                  py: 0.35,
+                }}
+              >
+                +{optionNames.length - 3}
+              </Box>
+            ) : null}
+          </Stack>
+        ) : null}
+
+        <Typography
+          sx={{
+            color: '#111827',
+            fontSize: { xs: 17, md: 19 },
+            fontWeight: 800,
+            lineHeight: 1,
+          }}
+        >
+          {formatPrice(product.price)}
+        </Typography>
+      </Stack>
+    </Stack>
+  )
+}
+
 export default function BrandDetailPage() {
   const params = useParams()
   const brandId = params?.id
@@ -50,8 +197,18 @@ export default function BrandDetailPage() {
     enabled: Boolean(brandId),
   })
 
+  const productsQuery = useQuery({
+    queryKey: productKeys.listByBrand(brandId),
+    queryFn: () => productService.getProducts({ brandId }),
+    enabled: Boolean(brandId),
+  })
+
   const brand = brandQuery.data
   const introduceParagraphs = useMemo(() => toParagraphs(brand?.introduce), [brand?.introduce])
+  const products = useMemo(
+    () => (Array.isArray(productsQuery.data) ? productsQuery.data : []),
+    [productsQuery.data]
+  )
 
   if (brandQuery.isLoading) {
     return (
@@ -61,11 +218,10 @@ export default function BrandDetailPage() {
     )
   }
 
-  if (brandQuery.error) {
+  if (brandQuery.error || productsQuery.error) {
+    const error = brandQuery.error || productsQuery.error
     const errorMessage =
-      brandQuery.error instanceof Error
-        ? brandQuery.error.message
-        : '브랜드 정보를 불러오지 못했습니다.'
+      error instanceof Error ? error.message : '브랜드 정보를 불러오지 못했습니다.'
 
     return (
       <ContentContainer sx={{ py: { xs: 4, md: 7 } }}>
@@ -167,16 +323,6 @@ export default function BrandDetailPage() {
               >
                 {brand.name}
               </Typography>
-              <Typography
-                sx={{
-                  maxWidth: 620,
-                  color: 'rgba(255, 255, 255, 0.86)',
-                  fontSize: { xs: 15, md: 18 },
-                  lineHeight: 1.75,
-                }}
-              >
-                {introduceParagraphs[0] || 'THE KINGS가 엄선한 브랜드의 감도와 제품을 만나보세요.'}
-              </Typography>
             </Stack>
           </Stack>
         </ContentContainer>
@@ -184,164 +330,108 @@ export default function BrandDetailPage() {
 
       <ContentContainer sx={{ py: { xs: 5, md: 8 } }}>
         <Stack spacing={{ xs: 5, md: 7 }}>
-          <Stack
-            direction={{ xs: 'column', md: 'row' }}
-            spacing={{ xs: 4, md: 8 }}
-            alignItems={{ xs: 'stretch', md: 'flex-start' }}
-          >
-            <Stack spacing={2.5} sx={{ flex: 1, minWidth: 0 }}>
+          <Stack spacing={2.5} sx={{ maxWidth: 840, minWidth: 0 }}>
+            <Typography
+              component="h2"
+              sx={{
+                color: '#111827',
+                fontSize: { xs: 25, md: 34 },
+                fontWeight: 700,
+                lineHeight: 1.25,
+                letterSpacing: 0,
+              }}
+            >
+              브랜드 스토리
+            </Typography>
+
+            <Stack spacing={1.8}>
+              {(introduceParagraphs.length
+                ? introduceParagraphs
+                : ['아직 등록된 브랜드 소개가 없습니다.']
+              ).map((paragraph) => (
+                <Typography
+                  key={paragraph}
+                  sx={{
+                    color: '#475569',
+                    fontSize: { xs: 15, md: 16 },
+                    lineHeight: 1.9,
+                  }}
+                >
+                  {paragraph}
+                </Typography>
+              ))}
+            </Stack>
+          </Stack>
+
+          <Stack component="section" spacing={3}>
+            <Stack spacing={1}>
               <Typography
                 component="h2"
                 sx={{
                   color: '#111827',
-                  fontSize: { xs: 25, md: 34 },
+                  fontSize: { xs: 24, md: 32 },
                   fontWeight: 700,
                   lineHeight: 1.25,
                   letterSpacing: 0,
                 }}
               >
-                Brand Story
+                상품
               </Typography>
-
-              <Stack spacing={1.8}>
-                {(introduceParagraphs.length
-                  ? introduceParagraphs
-                  : ['아직 등록된 브랜드 소개가 없습니다.']
-                ).map((paragraph) => (
-                  <Typography
-                    key={paragraph}
-                    sx={{
-                      color: '#475569',
-                      fontSize: { xs: 15, md: 16 },
-                      lineHeight: 1.9,
-                    }}
-                  >
-                    {paragraph}
-                  </Typography>
-                ))}
-              </Stack>
+              <Typography sx={{ color: '#64748b', fontSize: { xs: 14, md: 16 } }}>
+                {productsQuery.isLoading
+                  ? '상품을 불러오는 중입니다.'
+                  : `${products.length.toLocaleString('ko-KR')}개의 상품`}
+              </Typography>
             </Stack>
 
-            <Box
-              sx={{
-                width: { xs: '100%', md: 360 },
-                flexShrink: 0,
-                border: '1px solid',
-                borderColor: 'rgba(17, 24, 39, 0.1)',
-                bgcolor: '#fff',
-                p: { xs: 2.5, md: 3 },
-              }}
-            >
-              <Stack spacing={2.5}>
-                <Stack spacing={0.75}>
-                  <Typography
-                    sx={{
-                      color: '#94a3b8',
-                      fontSize: 12,
-                      fontWeight: 700,
-                      letterSpacing: 0,
-                      textTransform: 'uppercase',
-                    }}
-                  >
-                    Featured Brand
-                  </Typography>
-                  <Typography
-                    sx={{
-                      color: '#111827',
-                      fontSize: 24,
-                      fontWeight: 700,
-                      lineHeight: 1.25,
-                      overflowWrap: 'anywhere',
-                    }}
-                  >
-                    {brand.name}
-                  </Typography>
-                </Stack>
-
-                <Divider />
-
-                <Stack spacing={1.5}>
-                  <Stack direction="row" justifyContent="space-between" spacing={2}>
-                    <Typography sx={{ color: '#64748b', fontSize: 14 }}>큐레이션</Typography>
-                    <Typography sx={{ color: '#111827', fontSize: 14, fontWeight: 700 }}>
-                      THE KINGS Pick
-                    </Typography>
-                  </Stack>
-                  <Stack direction="row" justifyContent="space-between" spacing={2}>
-                    <Typography sx={{ color: '#64748b', fontSize: 14 }}>브랜드 번호</Typography>
-                    <Typography sx={{ color: '#111827', fontSize: 14, fontWeight: 700 }}>
-                      #{brand.id}
-                    </Typography>
-                  </Stack>
-                </Stack>
-
-                <Button
-                  component={Link}
-                  href="/"
-                  variant="contained"
-                  size="large"
-                  sx={{
-                    borderRadius: 0,
-                    bgcolor: '#111827',
-                    '&:hover': {
-                      bgcolor: '#0f172a',
-                    },
-                  }}
-                >
-                  THE KINGS 둘러보기
-                </Button>
+            {productsQuery.isLoading ? (
+              <Stack alignItems="center" sx={{ py: 8 }}>
+                <CircularProgress />
               </Stack>
-            </Box>
-          </Stack>
-
-          <Box
-            component="section"
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
-              borderTop: '1px solid rgba(17, 24, 39, 0.12)',
-              borderBottom: '1px solid rgba(17, 24, 39, 0.12)',
-            }}
-          >
-            {[
-              ['Authentic', '브랜드가 가진 고유한 감도와 방향성을 중심으로 소개합니다.'],
-              ['Selected', '쇼핑 경험에 맞는 대표 이미지와 스토리를 함께 제공합니다.'],
-              ['Curated', 'THE KINGS의 메인 큐레이션과 연결되는 브랜드 탐색 경험입니다.'],
-            ].map(([title, description], index) => (
+            ) : products.length > 0 ? (
               <Box
-                key={title}
                 sx={{
-                  minHeight: 180,
-                  p: { xs: 3, md: 4 },
-                  borderTop: {
-                    xs: index === 0 ? 0 : '1px solid rgba(17, 24, 39, 0.1)',
-                    md: 0,
+                  display: 'grid',
+                  gridTemplateColumns: {
+                    xs: 'repeat(2, minmax(0, 1fr))',
+                    sm: 'repeat(3, minmax(0, 1fr))',
+                    lg: 'repeat(4, minmax(0, 1fr))',
                   },
-                  borderLeft: {
-                    xs: 0,
-                    md: index === 0 ? 0 : '1px solid rgba(17, 24, 39, 0.1)',
-                  },
-                  bgcolor: index === 1 ? '#fff' : 'transparent',
+                  columnGap: { xs: 1.5, sm: 2, md: 3 },
+                  rowGap: { xs: 4, md: 5 },
                 }}
               >
-                <Stack spacing={1.5}>
+                {products.map((product) => (
+                  <ProductCard key={product.code} product={product} />
+                ))}
+              </Box>
+            ) : (
+              <Box
+                sx={{
+                  border: '1px solid rgba(17, 24, 39, 0.1)',
+                  bgcolor: '#fff',
+                  px: { xs: 2.5, md: 4 },
+                  py: { xs: 6, md: 8 },
+                }}
+              >
+                <Stack spacing={1.25} alignItems="center">
                   <Typography
                     sx={{
                       color: '#111827',
-                      fontSize: 20,
+                      fontSize: { xs: 19, md: 22 },
                       fontWeight: 700,
-                      lineHeight: 1.25,
+                      lineHeight: 1.3,
                     }}
                   >
-                    {title}
+                    등록된 상품이 없습니다.
                   </Typography>
-                  <Typography sx={{ color: '#64748b', fontSize: 14, lineHeight: 1.75 }}>
-                    {description}
+                  <Typography sx={{ color: '#64748b', fontSize: 14, textAlign: 'center' }}>
+                    다른 브랜드의 상품을 둘러보세요.
                   </Typography>
                 </Stack>
               </Box>
-            ))}
-          </Box>
+            )}
+          </Stack>
         </Stack>
       </ContentContainer>
     </Stack>

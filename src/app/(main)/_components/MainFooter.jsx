@@ -26,7 +26,6 @@ export default function MainFooter() {
         width: '100%',
         bgcolor: '#f3f4f6',
         borderTop: '1px solid #e5e7eb',
-        mt: { xs: 2, md: 4 },
         pt: { xs: 2.5, sm: 3 },
         pb: { xs: 2.25, sm: 1.5 },
       }}
