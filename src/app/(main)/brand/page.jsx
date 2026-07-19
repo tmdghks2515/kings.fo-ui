@@ -8,6 +8,7 @@ import ContentContainer from '@/components/layout/ContentContainer'
 import AppImage from '@/components/image/AppImage'
 import { API_BASE_URL } from '@/api/httpClient'
 import { brandService } from '@/api/brand/brandService'
+import { brandDetailHref } from '@/utils/routes'
 
 const brandKeys = {
   list: ['brands'],
@@ -45,7 +46,7 @@ function BrandCard({ brand }) {
   return (
     <Box
       component={Link}
-      href={`/brand/${brand.id}`}
+      href={brandDetailHref(brand.id)}
       sx={{
         border: '1px solid rgba(17, 24, 39, 0.1)',
         color: 'inherit',

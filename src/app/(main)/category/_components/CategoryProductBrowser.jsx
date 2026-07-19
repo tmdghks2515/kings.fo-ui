@@ -20,6 +20,7 @@ import AppImage from '@/components/image/AppImage'
 import { API_BASE_URL } from '@/api/httpClient'
 import { categoryService } from '@/api/category/categoryService'
 import { productService } from '@/api/product/productService'
+import { brandDetailHref, categoryHref, productDetailHref } from '@/utils/routes'
 
 const categoryKeys = {
   list: ['product-categories'],
@@ -126,12 +127,12 @@ function CategoryDepthSelector({ levels, selectedPath }) {
     if (categoryId === ALL_CATEGORY_VALUE) {
       const parentCategory = selectedPath[levelIndex - 1]
 
-      router.push(parentCategory?.id ? `/category/${parentCategory.id}` : '/category')
+      router.push(categoryHref(parentCategory?.id))
       return
     }
 
     if (categoryId) {
-      router.push(`/category/${categoryId}`)
+      router.push(categoryHref(categoryId))
     }
   }
 
@@ -214,7 +215,7 @@ function ProductCard({ product }) {
     <Stack spacing={1.35} sx={{ minWidth: 0 }}>
       <Box
         component={Link}
-        href={`/product/${encodeURIComponent(product.code)}`}
+        href={productDetailHref(product.code)}
         sx={{
           position: 'relative',
           width: '100%',
@@ -239,7 +240,7 @@ function ProductCard({ product }) {
         {product.brandName ? (
           <Typography
             component={Link}
-            href={product.brandId ? `/brand/${product.brandId}` : '#'}
+            href={product.brandId ? brandDetailHref(product.brandId) : '#'}
             sx={{
               alignSelf: 'flex-start',
               color: '#64748b',
@@ -255,7 +256,7 @@ function ProductCard({ product }) {
 
         <Typography
           component={Link}
-          href={`/product/${encodeURIComponent(product.code)}`}
+          href={productDetailHref(product.code)}
           sx={{
             color: '#111827',
             display: '-webkit-box',

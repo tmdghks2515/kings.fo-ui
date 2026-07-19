@@ -1,14 +1,15 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { Suspense, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { Alert, Box, Button, CircularProgress, Divider, Stack, Typography } from '@mui/material'
 import ContentContainer from '@/components/layout/ContentContainer'
 import AppImage from '@/components/image/AppImage'
 import { API_BASE_URL } from '@/api/httpClient'
 import { productService } from '@/api/product/productService'
+import { brandDetailHref } from '@/utils/routes'
 
 const productKeys = {
   detail: (code) => ['products', code],
@@ -105,9 +106,9 @@ const groupOptions = (options) =>
     return groups
   }, [])
 
-export default function ProductDetailPage() {
-  const params = useParams()
-  const productCode = params?.code
+function ProductDetailContent() {
+  const searchParams = useSearchParams()
+  const productCode = searchParams.get('code')
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
 
   const productQuery = useQuery({
@@ -245,7 +246,7 @@ export default function ProductDetailPage() {
                     {product.brandName ? (
                       <Typography
                         component={Link}
-                        href={product.brandId ? `/brand/${product.brandId}` : '#'}
+                        href={product.brandId ? brandDetailHref(product.brandId) : '#'}
                         sx={{
                           color: '#475569',
                           fontSize: 13,
@@ -432,5 +433,13 @@ export default function ProductDetailPage() {
         </Stack>
       </ContentContainer>
     </Stack>
+  )
+}
+
+export default function ProductDetailPage() {
+  return (
+    <Suspense fallback={null}>
+      <ProductDetailContent />
+    </Suspense>
   )
 }

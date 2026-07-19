@@ -1,8 +1,8 @@
 'use client'
 
-import { useMemo } from 'react'
+import { Suspense, useMemo } from 'react'
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { Alert, Box, CircularProgress, Stack, Typography } from '@mui/material'
 import ContentContainer from '@/components/layout/ContentContainer'
@@ -10,6 +10,7 @@ import AppImage from '@/components/image/AppImage'
 import { API_BASE_URL } from '@/api/httpClient'
 import { brandService } from '@/api/brand/brandService'
 import { productService } from '@/api/product/productService'
+import { productDetailHref } from '@/utils/routes'
 
 const brandKeys = {
   detail: (id) => ['brands', id],
@@ -88,7 +89,7 @@ function ProductCard({ product }) {
     <Stack spacing={1.35} sx={{ minWidth: 0 }}>
       <Box
         component={Link}
-        href={`/product/${encodeURIComponent(product.code)}`}
+        href={productDetailHref(product.code)}
         sx={{
           position: 'relative',
           width: '100%',
@@ -112,7 +113,7 @@ function ProductCard({ product }) {
       <Stack spacing={0.75} sx={{ minWidth: 0 }}>
         <Typography
           component={Link}
-          href={`/product/${encodeURIComponent(product.code)}`}
+          href={productDetailHref(product.code)}
           sx={{
             color: '#111827',
             display: '-webkit-box',
@@ -187,9 +188,9 @@ function ProductCard({ product }) {
   )
 }
 
-export default function BrandDetailPage() {
-  const params = useParams()
-  const brandId = params?.id
+function BrandDetailContent() {
+  const searchParams = useSearchParams()
+  const brandId = searchParams.get('id')
 
   const brandQuery = useQuery({
     queryKey: brandKeys.detail(brandId),
@@ -435,5 +436,13 @@ export default function BrandDetailPage() {
         </Stack>
       </ContentContainer>
     </Stack>
+  )
+}
+
+export default function BrandDetailPage() {
+  return (
+    <Suspense fallback={null}>
+      <BrandDetailContent />
+    </Suspense>
   )
 }

@@ -15,10 +15,15 @@
 
 # next.js
 /.next/
+/.next-dev/
 /out/
 
 # production
 /build
+
+# local env files
+.env.development.local
+.env.*.local
 
 # misc
 .DS_Store

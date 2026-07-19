@@ -11,6 +11,12 @@ import BrandShortcuts from '@/components/curation/BrandShortcuts'
 import ContentContainer from '@/components/layout/ContentContainer'
 import { API_BASE_URL } from '@/api/httpClient'
 import { displayService } from '@/api/display/displayService'
+import {
+  brandDetailHref,
+  categoryHref,
+  productDetailHref,
+  toStaticPublicHref,
+} from '@/utils/routes'
 import { Alert, Box, CircularProgress, Stack } from '@mui/material'
 
 const curationPageKeys = {
@@ -37,16 +43,16 @@ const toLinkHref = (link) => {
     return '/'
   }
   if (typeof link === 'string') {
-    return link
+    return toStaticPublicHref(link)
   }
   if (link.type === 'CategoryLink' && link.categoryId) {
-    return `/category/${link.categoryId}`
+    return categoryHref(link.categoryId)
   }
   if (link.type === 'BrandLink' && link.brandId) {
-    return `/brand/${link.brandId}`
+    return brandDetailHref(link.brandId)
   }
   if (link.type === 'ProductDetailLink' && link.productCode) {
-    return `/product/${link.productCode}`
+    return productDetailHref(link.productCode)
   }
 
   return '/'
