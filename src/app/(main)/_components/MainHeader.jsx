@@ -12,7 +12,7 @@ const NAV_ITEMS = [
   { label: 'Contact Us', href: '/contact', activePaths: ['/contact'] },
 ]
 
-export default function MainHeader() {
+export default function MainHeader({ showBrandMenu = false }) {
   const pathname = usePathname()
   const lastScrollYRef = useRef(0)
   const [isVisible, setIsVisible] = useState(true)
@@ -102,6 +102,10 @@ export default function MainHeader() {
           }}
         >
           {NAV_ITEMS.map((item) => {
+            if (item.href === '/brand' && !showBrandMenu) {
+              return null
+            }
+
             const isActive = item.activePaths.some((activePath) => {
               if (activePath === '/') {
                 return pathname === '/'
