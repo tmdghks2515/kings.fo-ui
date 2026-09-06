@@ -25,7 +25,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: '"SpoqaHanSansNeo", "Pretendard", "Noto Sans KR", sans-serif',
+    fontFamily: '"SpoqaHanSansNeo", "Noto Sans SC", "Pretendard", "Noto Sans KR", sans-serif',
     button: {
       textTransform: "none",
       fontWeight: 700,

@@ -1,3 +1,5 @@
+@import "../../public/fonts/noto-sans-sc/index.css";
+
 @font-face {
   font-family: "SpoqaHanSansNeo";
   src: url("../../public/fonts/SpoqaHanSansNeo-Regular.woff2") format("woff2");
@@ -31,7 +33,7 @@
 html,
 body {
   min-height: 100%;
-  font-family: "SpoqaHanSansNeo", "Pretendard", "Noto Sans KR", sans-serif;
+  font-family: "SpoqaHanSansNeo", "Noto Sans SC", "Pretendard", "Noto Sans KR", sans-serif;
 }
 
 body {
